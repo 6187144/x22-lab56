@@ -22,6 +22,9 @@ document.getElementById("task-submit").addEventListener("click", async () => {
     let lati;
     let lngi;
     let getLoca = async function () {
+        // let pi = new Promise(function(res,rej) {
+
+        // });
         let loca = `http://api.positionstack.com/v1/forward?access_key=${geoKey}&query=${taskStreetNo}%20${taskAddress},%20Gatineau%20QC`;
         //console.log("fdsfsd");   
         let response = await axios.get(loca);
@@ -29,16 +32,18 @@ document.getElementById("task-submit").addEventListener("click", async () => {
         let data = response.data;
         //let [first] = data;
         let first = data.data[0];
-        lati = first.latitude;
-        lngi = first.longitude;
-        console.log(lati);
-        console.log(lngi);
+        lati = first.latitude + "";
+        lngi = first.longitude + "";
+        // console.log(lati);
+        // console.log(lngi);
 
     }
     await getLoca();
+    // console.log(lati);
+    // console.log(lngi);
     if (taskName.trim() != '') {
-        let newTask = { name: taskName, address: taskAddress, postcode:taskPostcode,streetNo:taskStreetNo,lat:lati,lng:lngi };
-
+        let newTask = { name: taskName, address: taskAddress, postcode: taskPostcode, streetNo: taskStreetNo, lat: lati, lng: lngi };
+        //console.log(JSON.stringify(newTask));
         let newLab56Data = await fetch(Lab56ServiceUrl,
             {
                 cache: 'no-cache',
@@ -58,50 +63,40 @@ let getLab56s = async function () {
     //console.log("sadas");
     let Lab56Data = await (await fetch(Lab56ServiceUrl,
         {
-            cache: 'no-cache', 
+            cache: 'no-cache',
             method: 'GET'
         })).json();
-        //console.log(Lab56Data);
+    //console.log(Lab56Data);
     let html = "";
     html += "<ol>";
     let conList;
     for (let i = 0; i < Lab56Data.length; i++) {
-        html += `<li>${Lab56Data[i].name}  ${Lab56Data[i].streetNo} ${Lab56Data[i].address} ${Lab56Data[i].postCode}</li>`;
+        html += `<li>${Lab56Data[i].name}  ${Lab56Data[i].streetNo} ${Lab56Data[i].address} </li>`;
         //console.log(Lab56Data[i].address);
-        conList+=Lab56Data[i].address;
-        
-            lng = Lab56Data[i].lng;
-            lat = Lab56Data[i].lat;
-            //console.log({ "lat": lat, "lng": lng });
-            hydrants.push(new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map));
+        conList += Lab56Data[i].address;
+
+        lng = Lab56Data[i].lng;
+        lat = Lab56Data[i].lat;
+        //console.log({ "lat": lat, "lng": lng });
+        hydrants.push(new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map));
     }
     html += "</ol>";
     //console.log("sadas");
     Lab56El.innerHTML = html;
     //console.log(conList);
-    
-    let contactsListEl = ["-75.805517 45.420381","-75.845517 45.440381"];
+
+    let contactsListEl = ["-75.805517 45.420381", "-75.845517 45.440381"];
     //console.log(contactsListEl);
     let i = 0;
 
     contactsListEl.forEach((el) => {
         i++;
 
-        
-            //POINT (-75.805517 45.420381)
 
-            // let locString = el.childNodes[19].innerHTML;
-            // locString = locString.substring(7, locString.length - 1).split(' ');
-            // locString = el.split(' ');
-            // lng = locString[0];
-            // lat = locString[1];
-            // //console.log({ "lat": lat, "lng": lng });
-            // hydrants.push(new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map));
-        
     });
 }
 
-let mapInit = function() {
+let mapInit = function () {
     map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/6187144/cl2afv12m000c14p5qtma8qwz',
