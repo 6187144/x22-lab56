@@ -22,9 +22,7 @@ document.getElementById("task-submit").addEventListener("click", async () => {
     let lati;
     let lngi;
     let getLoca = async function () {
-        // let pi = new Promise(function(res,rej) {
 
-        // });
         let loca = `http://api.positionstack.com/v1/forward?access_key=${geoKey}&query=${taskStreetNo}%20${taskAddress},%20Gatineau%20QC`;
         //console.log("fdsfsd");   
         let response = await axios.get(loca);
@@ -34,8 +32,7 @@ document.getElementById("task-submit").addEventListener("click", async () => {
         let first = data.data[0];
         lati = first.latitude + "";
         lngi = first.longitude + "";
-        // console.log(lati);
-        // console.log(lngi);
+
 
     }
     await getLoca();
@@ -78,22 +75,13 @@ let getLab56s = async function () {
         lng = Lab56Data[i].lng;
         lat = Lab56Data[i].lat;
         //console.log({ "lat": lat, "lng": lng });
-        hydrants.push(new mapboxgl.Marker().setLngLat([lng, lat]).addTo(map));
+        hydrants.push(new mapboxgl.Marker().setLngLat([lng, lat]).setPopup(new mapboxgl.Popup().
+            setHTML(`${Lab56Data[i].name}<br>${Lab56Data[i].phoneNumber} `).addTo(map)));
     }
     html += "</ol>";
     //console.log("sadas");
     Lab56El.innerHTML = html;
-    //console.log(conList);
 
-    let contactsListEl = ["-75.805517 45.420381", "-75.845517 45.440381"];
-    //console.log(contactsListEl);
-    let i = 0;
-
-    contactsListEl.forEach((el) => {
-        i++;
-
-
-    });
 }
 
 let mapInit = function () {
